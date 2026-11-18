@@ -1,7 +1,31 @@
 # 🏆 Reto final
 
-**Objetivo:** demostrar todo lo que aprendiste dejando tu nombre en este
-repositorio por medio de un **Pull Request**.
+**Objetivo:** demostrar que completaste **todo el curso**. Tu Pull Request solo
+se acepta si tu repositorio de práctica tiene la evidencia de cada módulo.
+
+> [!IMPORTANT]
+> Haz este reto **al final**, cuando ya hayas terminado los ejercicios de los
+> módulos 02 al 08. Un robot revisa tu repositorio de práctica automáticamente:
+> si te saltaste algo, te lo va a decir.
+
+## ✅ Requisitos antes de empezar
+
+Todo se revisa en **tu** repositorio `mi-primer-repo` (el que creaste en el
+módulo 03). Debe ser **público** y llamarse **exactamente** `mi-primer-repo`.
+
+| Módulo | Evidencia que se revisa |
+|:-:|---|
+| [02](../02-instalacion/) | Tus commits aparecen ligados a tu cuenta (configuraste el correo correcto) |
+| [03](../03-primer-repo/) | El repo tiene `README.md` y al menos 3 commits |
+| [04](../04-ramas/) | Hay una unión de ramas hecha en tu computadora (el ejercicio del conflicto) |
+| [05](../05-colaborar/) | Aceptaste un Pull Request de un compañero |
+| [06](../06-extras/) | Tiene un `.gitignore` que ignora archivos `.log` y al menos un Issue |
+| [07](../07-git-y-github-juntos/) | Hiciste `git pull` para unir un cambio que hiciste desde la página de GitHub |
+| [08](../08-permisos/) | La rama `main` está protegida |
+
+El módulo 01 es teórico y se evalúa en clase.
+
+## Pasos
 
 ```mermaid
 flowchart LR
@@ -10,10 +34,9 @@ flowchart LR
     C --> D["Agrega tu fila en<br/>alumnos.md"]
     D --> E["Commit<br/>y push"]
     E --> F["Pull<br/>Request"]
-    F --> G["🎉 Aceptado"]
+    F --> G["🤖 Revisión<br/>automática"]
+    G --> H["🎉 Aceptado"]
 ```
-
-## Pasos
 
 **1. Haz fork** del repositorio original, [git-master-utn/aprende-github](https://github.com/git-master-utn/aprende-github), con el botón **Fork** de arriba a la derecha.
 
@@ -24,14 +47,15 @@ git clone git@github.com:TU-USUARIO/aprende-github.git
 cd aprende-github
 ```
 
-**3. Crea una rama con tu nombre:**
+**3. Crea una rama:**
 
 ```bash
 git switch -c agrega-tu-nombre
 ```
 
-**4. Edita el archivo** [`reto-final/alumnos.md`](alumnos.md) y agrega **una fila
-al final de la tabla** con tus datos, siguiendo el formato del ejemplo.
+**4. Edita** [`reto-final/alumnos.md`](alumnos.md) y agrega **una fila al final
+de la tabla** con tus datos, siguiendo el formato del ejemplo. El usuario de la
+fila debe ser **el tuyo**.
 
 **5. Guarda y sube tu cambio:**
 
@@ -42,13 +66,24 @@ git push -u origin agrega-tu-nombre
 ```
 
 **6. Abre el Pull Request** desde tu fork con el botón **Compare & pull request**.
-En el título escribe: `Reto final: Tu Nombre`.
+En el título escribe `Reto final: Tu Nombre` y llena la lista de la descripción.
+
+## 🤖 ¿Qué pasa después?
+
+En un minuto aparece un **comentario automático** en tu Pull Request con una
+tabla: ✅ lo que ya cumpliste y ❌ lo que te falta.
+
+- Si todo sale en ✅, el instructor acepta tu Pull Request.
+- Si algo sale en ❌, ve al módulo indicado, haz el ejercicio en tu
+  `mi-primer-repo` y después **edita la descripción de tu Pull Request**
+  (basta con agregar un espacio y guardar). El robot vuelve a revisar y
+  actualiza su comentario.
 
 ## Reglas
 
 - Solo modifica `reto-final/alumnos.md`.
 - Agrega **una sola fila** y no borres las de tus compañeros.
-- Usa un mensaje de commit claro.
+- Usa tu propio usuario en la fila.
 
 > [!TIP]
 > Si GitHub dice que tu PR tiene **conflictos**, es porque alguien más agregó su
@@ -56,14 +91,6 @@ En el título escribe: `Reto final: Tu Nombre`.
 > ejecuta `git switch main`, `git pull`, `git switch agrega-tu-nombre` y
 > `git merge main`. Resuelve el conflicto como en el
 > [módulo 04](../04-ramas/) y vuelve a hacer `git push`.
-
-## Lo que demuestras con este reto
-
-- [ ] Fork y clone
-- [ ] Ramas
-- [ ] add, commit y push
-- [ ] Pull Request
-- [ ] (Tal vez) resolver un conflicto real
 
 ---
 

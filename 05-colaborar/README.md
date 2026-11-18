@@ -109,6 +109,12 @@ Practica con un compañero:
 3. Mándale un Pull Request.
 4. Tu compañero lo revisa y lo acepta. Luego cambian de papel.
 
+## 🔎 Evidencia para el reto final
+
+> [!IMPORTANT]
+> En tu `mi-primer-repo` debe quedar **aceptado** al menos un Pull Request
+> hecho por un compañero.
+
 ## ✅ Antes de continuar
 
 - [ ] Entiendo la diferencia entre fork y clone

@@ -56,7 +56,11 @@ Estos datos aparecen en cada commit que hagas. Cambia el nombre y el correo por 
 git config --global user.name "Tu Nombre"
 git config --global user.email "tucorreo@ejemplo.com"
 git config --global init.defaultBranch main
+git config --global pull.rebase false
 ```
+
+La última línea le dice a Git cómo unir cambios cuando haces `git pull`; sin ella,
+las versiones nuevas de Git marcan error en el módulo 07.
 
 Revisa que se guardaron:
 
@@ -116,6 +120,12 @@ git --version
 git config --global user.name
 ssh -T git@github.com
 ```
+
+## 🔎 Evidencia para el reto final
+
+> [!IMPORTANT]
+> Usa en `user.email` **el mismo correo de tu cuenta de GitHub**. Así GitHub liga
+> tus commits a tu perfil, y eso es lo primero que revisa el reto final.
 
 ## ✅ Antes de continuar
 

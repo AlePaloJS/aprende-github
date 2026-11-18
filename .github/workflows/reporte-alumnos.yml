@@ -1,0 +1,27 @@
+name: Reporte de avance de alumnos
+
+# Se ejecuta a mano desde la pestaña Actions → "Reporte de avance de alumnos" → Run workflow
+on:
+  workflow_dispatch:
+    inputs:
+      usuarios:
+        description: "Usuarios extra separados por coma (por ejemplo, los que tienen PR abierto)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  reporte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Generar reporte
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USUARIOS: ${{ inputs.usuarios }}
+        run: python3 .github/scripts/verificar_reto.py todos

@@ -137,7 +137,12 @@ Trabaja con un compañero:
 3. **Protege la rama `main`** para exigir Pull Request.
 4. Que tu compañero intente otro push directo a `main` y vea el rechazo.
 5. Que lo suba en una rama y abra un Pull Request. Acéptalo tú.
-6. Al terminar, **quítale el acceso**.
+6. Al terminar, **quítale el acceso**, pero **deja activa la protección** de `main`.
+
+## 🔎 Evidencia para el reto final
+
+> [!IMPORTANT]
+> La rama `main` de tu `mi-primer-repo` debe quedar **protegida**.
 
 ## ✅ Antes de continuar
 
