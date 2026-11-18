@@ -182,10 +182,12 @@ def revisar_fila(repo, numero, autor):
 
 
 def modo_pr():
-    repo = os.environ["REPO"]
-    numero = os.environ["PR_NUMBER"]
-    autor = os.environ["PR_AUTHOR"]
+    completo = verificar_pr(os.environ["REPO"], os.environ["PR_NUMBER"], os.environ["PR_AUTHOR"])
+    sys.exit(0 if completo else 1)
 
+
+def verificar_pr(repo, numero, autor, resumen_en_log=True):
+    """Revisa un PR, deja (o actualiza) el comentario del robot y dice si está completo."""
     problemas = revisar_fila(repo, numero, autor)
     res, info = revisar(autor)
     completo = not problemas and all(ok for _, _, ok, _ in res)
@@ -217,11 +219,28 @@ def modo_pr():
         api("POST", f"/repos/{repo}/issues/{numero}/comments", {"body": cuerpo})
 
     resumen = os.environ.get("GITHUB_STEP_SUMMARY")
-    if resumen:
+    if resumen and resumen_en_log:
         with open(resumen, "a", encoding="utf-8") as f:
             f.write(cuerpo.replace(MARCA, "") + "\n")
-    print(cuerpo)
-    sys.exit(0 if completo else 1)
+    if resumen_en_log:
+        print(cuerpo)
+    return completo
+
+
+def prs_abiertos(repo):
+    """Lista (numero, autor) de los Pull Requests abiertos, sin los del dueño."""
+    duenio = repo.split("/")[0].lower()
+    lista, pagina = [], 1
+    while True:
+        st, prs = get(f"/repos/{repo}/pulls?state=open&per_page=100&page={pagina}")
+        if st != 200 or not prs:
+            break
+        lista += [(p["number"], p["user"]["login"]) for p in prs
+                  if p["user"]["login"].lower() != duenio]
+        if len(prs) < 100:
+            break
+        pagina += 1
+    return lista
 
 
 def usuarios_de_la_lista(ruta):
@@ -235,13 +254,25 @@ def usuarios_de_la_lista(ruta):
 
 
 def modo_todos():
+    repo = os.environ.get("REPO", "")
+    comentar = os.environ.get("COMENTAR", "").lower() == "true"
     extra = [u.strip().lstrip("@") for u in os.environ.get("USUARIOS", "").split(",") if u.strip()]
-    usuarios = list(dict.fromkeys(usuarios_de_la_lista(ARCHIVO_LISTA) + extra))
+    abiertos = prs_abiertos(repo) if repo else []
+    pr_de = {}
+    for numero, autor in abiertos:
+        pr_de.setdefault(autor.lower(), []).append(numero)
+    usuarios = list(dict.fromkeys(usuarios_de_la_lista(ARCHIVO_LISTA)
+                                  + [a for _, a in abiertos] + extra))
+    if comentar:
+        for numero, autor in abiertos:
+            verificar_pr(repo, numero, autor, resumen_en_log=False)
     cols = list(MODULOS)
     lineas = ["# 📊 Avance de los alumnos", "",
               f"Repositorio revisado de cada alumno: `USUARIO/{REPO_PRACTICA}`", "",
-              "| Alumno | " + " | ".join(cols) + " | Avance | Commits | Periodo |",
-              "|---|" + "|".join(":-:" for _ in cols) + "|:-:|:-:|---|"]
+              f"Pull Requests abiertos de alumnos: **{len(abiertos)}** · "
+              f"alumnos revisados: **{len(usuarios)}**", "",
+              "| Alumno | PR | " + " | ".join(cols) + " | Avance | Commits | Periodo |",
+              "|---|---|" + "|".join(":-:" for _ in cols) + "|:-:|:-:|---|"]
     for u in usuarios:
         res, info = revisar(u)
         por_mod = {m: [ok for mod, _, ok, _ in res if mod == m] for m in cols}
@@ -249,10 +280,14 @@ def modo_todos():
         hechos = marcas.count("✅")
         periodo = f"{info['desde']} → {info['hasta']}" if info else "sin repo"
         commits = info["commits"] if info else 0
-        lineas.append(f"| [@{u}](https://github.com/{u}/{REPO_PRACTICA}) | "
+        prs = " ".join(f"[#{n}](https://github.com/{repo}/pull/{n})"
+                       for n in pr_de.get(u.lower(), [])) or "—"
+        lineas.append(f"| [@{u}](https://github.com/{u}/{REPO_PRACTICA}) | {prs} | "
                       + " | ".join(marcas) + f" | {hechos}/{len(cols)} | {commits} | {periodo} |")
     if not usuarios:
-        lineas.append("| (no hay alumnos registrados todavía) |" + " |" * (len(cols) + 3))
+        lineas.append("| (no hay alumnos registrados todavía) |" + " |" * (len(cols) + 4))
+    if comentar:
+        lineas += ["", f"Se dejó o actualizó el comentario del robot en {len(abiertos)} Pull Requests."]
     lineas += ["", "Módulos: 02 correo ligado a la cuenta · 03 README y 3 commits · "
                "04 unión de ramas local · 05 PR de un compañero aceptado · "
                "06 `.gitignore` e Issue · 07 `git pull` con cambios de GitHub · 08 rama protegida"]
